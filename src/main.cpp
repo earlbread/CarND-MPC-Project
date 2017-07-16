@@ -98,6 +98,16 @@ int main() {
           * Both are in between [-1, 1].
           *
           */
+          vector<double> vehicle_ptsx;
+          vector<double> vehicle_ptsy;
+
+          for (auto i = 0; i < ptsx.size(); i++) {
+            double x = (ptsx[i] - px) * cos(psi) + (ptsy[i] - py) * sin(psi);
+            double y = -(ptsx[i] - px) * sin(psi) + (ptsy[i] - py) * cos(psi);
+            vehicle_ptsx.push_back(x);
+            vehicle_ptsy.push_back(y);
+          }
+
           double steer_value;
           double throttle_value;
 
@@ -120,6 +130,11 @@ int main() {
           //Display the waypoints/reference line
           vector<double> next_x_vals;
           vector<double> next_y_vals;
+
+          for (auto i = 0; i < vehicle_ptsx.size(); i++) {
+            next_x_vals.push_back(vehicle_ptsx[i]);
+            next_y_vals.push_back(vehicle_ptsy[i]);
+          }
 
           //.. add (x,y) points to list here, points are in reference to the vehicle's coordinate system
           // the points in the simulator are connected by a Yellow line
