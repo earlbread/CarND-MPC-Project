@@ -3,6 +3,45 @@ Self-Driving Car Engineer Nanodegree Program
 
 ---
 
+## Description
+
+This project is implementation of Model Predictive Control to drvie the car around the track. 
+
+### The Model
+
+The model used in this project is Kinematic Bicycle Model which consists of following states:
+
+ - `x`: The x position of the vehicle.
+ - `y`: The y position of the vehicle.
+ - `psi`: The orientation of the vehicle.
+ - `v`: The current velocity.
+ - `cte`: The Cross-Track-Error
+ - `epsi`: The orientation error
+
+The update equation is following:
+
+```cpp
+fg[1 + x_start + t] = x1 - (x0 + v0 * CppAD::cos(psi0) * dt);
+fg[1 + y_start + t] = y1 - (y0 + v0 * CppAD::sin(psi0) * dt);
+fg[1 + psi_start + t] = psi1 - (psi0 + v0 * delta0 / Lf * dt);
+fg[1 + v_start + t] = v1 - (v0 + a0 * dt);
+fg[1 + cte_start + t] = cte1 - ((f0 - y0) + (v0 * CppAD::sin(epsi0) * dt));
+fg[1 + epsi_start + t] = epsi1 - ((psi0 - psides0) + v0 * delta0 / Lf * dt);
+```
+
+### Timestep Length and dt
+
+At first, I started with `N=25` and `dt=0.05`. But I changed the values to `N=10` and `dt=0.15` because:
+
+ - Smaller dt is better because it gives finer resolution.
+ - But we have the 100ms latency, so I chose the larger value to deal with the latency.
+ - Larger value than `N=10` is easy to miscalculate.
+ - Smaller value thant `N=10` is not enough to caculate the trajectory.
+
+### Latency
+
+As noted above, I chose `dt=0.15` to deal with the latency.
+
 ## Dependencies
 
 * cmake >= 3.5
