@@ -31,7 +31,7 @@ fg[1 + epsi_start + t] = epsi1 - ((psi0 - psides0) + v0 * delta0 / Lf * dt);
 
 ### Timestep Length and dt
 
-At first, I started with `N=25` and `dt=0.05`. But I changed the values to `N=10` and `dt=0.15` because:
+At first, I started with `N=25` and `dt=0.05`. But I changed the values to `N=10` and `dt=0.2` because:
 
  - Smaller dt is better because it gives finer resolution.
  - But we have the 100ms latency, so I chose the larger value to deal with the latency.
@@ -40,7 +40,22 @@ At first, I started with `N=25` and `dt=0.05`. But I changed the values to `N=10
 
 ### Latency
 
-As noted above, I chose `dt=0.15` to deal with the latency.
+As noted above, I chose `dt=0.2` to deal with the latency. Also, I incorporated the latency into the model.
+
+```cpp
+Eigen::VectorXd state_vector(6);
+
+double latency = 0.1;
+double Lf = 2.67;
+
+double x = v * cos(psi) * latency;
+psi = v / Lf * delta * latency;
+v = v + a * latency;
+
+state_vector << x, 0, psi, v, cte, epsi;
+
+auto results = mpc.Solve(state_vector, coeffs);
+```
 
 ## Dependencies
 
