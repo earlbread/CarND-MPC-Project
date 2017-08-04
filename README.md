@@ -7,6 +7,9 @@ Self-Driving Car Engineer Nanodegree Program
 
 This project is implementation of Model Predictive Control to drvie the car around the track. 
 
+[![Result Video](https://img.youtube.com/vi/CEHRLik1g-Y/0.jpg)](https://youtu.be/CEHRLik1g-Y)
+
+
 ### The Model
 
 The model used in this project is Kinematic Bicycle Model which consists of following states:
@@ -27,6 +30,15 @@ fg[1 + psi_start + t] = psi1 - (psi0 + v0 * delta0 / Lf * dt);
 fg[1 + v_start + t] = v1 - (v0 + a0 * dt);
 fg[1 + cte_start + t] = cte1 - ((f0 - y0) + (v0 * CppAD::sin(epsi0) * dt));
 fg[1 + epsi_start + t] = epsi1 - ((psi0 - psides0) + v0 * delta0 / Lf * dt);
+```
+
+### Polynomial Fitting and MPC Preprocessing
+
+The waypoints from simulator are global coordinate system, but we have to transform them because all computations are performed in the vehicle coordinate system.
+
+```cpp
+double x = (ptsx[i] - px) * cos(psi) + (ptsy[i] - py) * sin(psi);
+double y = -(ptsx[i] - px) * sin(psi) + (ptsy[i] - py) * cos(psi);
 ```
 
 ### Timestep Length and dt
